@@ -1,0 +1,5 @@
+services:
+  barcode-reader:
+    build: .
+    ports:
+      - "5005:5005"
