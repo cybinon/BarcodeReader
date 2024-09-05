@@ -22,9 +22,9 @@ func main() {
 
 func runCMD() string {
 	isWindows := runtime.GOOS == "windows"
-	exe, shell, flag := "./BarcodeReaderCLI/bin/BarcodeReaderCLI", "sh", "-c"
+	exe, shell, flag := "./bin/BarcodeReaderCLI", "sh", "-c"
 	if isWindows {
-		exe, shell, flag = ".\\BarcodeReaderCLI", "cmd.exe", "/c"
+		exe, shell, flag = ".\\bin\\BarcodeReaderCLI.exe", "cmd.exe", "/c"
 	}
 
 	args := []string{
