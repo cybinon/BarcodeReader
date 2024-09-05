@@ -13,7 +13,8 @@ func main() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		res := runCMD()
-		return c.SendString(res)
+		println(res)
+		return c.SendString("Hello, World!")
 	})
 	println("Listening on port 5005")
 	app.Listen(":5005")
@@ -22,9 +23,9 @@ func main() {
 
 func runCMD() string {
 	isWindows := runtime.GOOS == "windows"
-	exe, shell, flag := "./bin/BarcodeReaderCLI", "sh", "-c"
+	exe, shell, flag := "./BarcodeReaderCLI", "sh", "-c"
 	if isWindows {
-		exe, shell, flag = ".\\bin\\BarcodeReaderCLI.exe", "cmd.exe", "/c"
+		exe, shell, flag = ".\\BarcodeReaderCLI.exe", "cmd.exe", "/c"
 	}
 
 	args := []string{

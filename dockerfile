@@ -1,20 +1,27 @@
-# Specifies a parent image
-FROM golang:1.23-bullseye
-
-# Creates an app directory to hold your app’s source code
+# Use the official Golang image as the base image
+FROM golang:1.23-alpine AS builder
+# Set the working directory inside the container
 WORKDIR /app
-
-# Copies everything from your root directory into /app
-COPY . .
-
-# Installs Go dependencies
+# Copy the Go module files
+COPY go.mod go.sum ./
+# Download and install Go dependencies
 RUN go mod download
-
-# Builds your app with optional configuration
+# Copy the rest of the application source code
+COPY . .
+# Build the Go application
 RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
-# Tells Docker which network port your container listens on
+# Start a new stage from scratch
+FROM alpine:latest
+# Set the working directory inside the container
+WORKDIR /root/
+RUN apk add --no-cache tzdata
+# Copy the built executable from the previous stage
+COPY --from=builder /app/app .
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/share ./share
+COPY --from=builder /app/BarcodeReaderCLI ./BarcodeReaderCLI
+# Expose the port on which the application will listen
 EXPOSE 5005
-
-# Specifies the executable command that runs when the container starts
-CMD [ “./app ]
+# Command to run the executable
+CMD ["./app"]
